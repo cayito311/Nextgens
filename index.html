@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo de Productos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .brand-selection {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .brand {
+            background-color: #f1f1f1;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .brand img {
+            width: 40px;
+            height: auto;
+        }
+
+        .brand:hover {
+            transform: scale(1.1);
+        }
+
+        .product-catalog {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .product-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .product-card {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            width: 220px;
+            text-align: center;
+            position: relative;
+            padding: 15px;
+            box-sizing: border-box;
+        }
+
+        .product-card img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .product-info {
+            margin-top: 10px;
+        }
+
+        .price, .brand, .product-name {
+            display: block;
+            text-align: center;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .price {
+            font-size: 1.1em;
+            color: #d9534f;
+        }
+
+        .back-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .back-button:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Panel de selección de marcas -->
+    <div class="brand-selection" id="brandSelection">
+        <div class="brand" onclick="showProducts('Motorola')">
+            <img src="https://via.placeholder.com/40?text=M" alt="Motorola">
+        </div>
+        <div class="brand" onclick="showProducts('ZTE')">
+            <img src="https://via.placeholder.com/40?text=Z" alt="ZTE">
+        </div>
+        <div class="brand" onclick="showProducts('Tablet')">
+            <img src="https://via.placeholder.com/40?text=T" alt="Tablet">
+        </div>
+        <div class="brand" onclick="showProducts('Oppo')">
+            <img src="https://via.placeholder.com/40?text=O" alt="Oppo">
+        </div>
+        <div class="brand" onclick="showProducts('Infinix')">
+            <img src="https://via.placeholder.com/40?text=I" alt="Infinix">
+        </div>
+        <div class="brand" onclick="showProducts('Samsung')">
+            <img src="https://via.placeholder.com/40?text=S" alt="Samsung">
+        </div>
+        <div class="brand" onclick="showProducts('Tecno')">
+            <img src="https://via.placeholder.com/40?text=T" alt="Tecno">
+        </div>
+        <div class="brand" onclick="showProducts('Realme')">
+            <img src="https://via.placeholder.com/40?text=R" alt="Realme">
+        </div>
+        <div class="brand" onclick="showProducts('Xiaomi')">
+            <img src="https://via.placeholder.com/40?text=X" alt="Xiaomi">
+        </div>
+        <div class="brand" onclick="showProducts('Poco')">
+            <img src="https://via.placeholder.com/40?text=P" alt="Poco">
+        </div>
+        <div class="brand" onclick="showProducts('Corn')">
+            <img src="https://via.placeholder.com/40?text=C" alt="Corn">
+        </div>
+    </div>
+
+    <!-- Catálogo de productos -->
+    <div class="product-catalog" id="productCatalog">
+        <h2 id="selectedBrand"></h2>
+        <div class="product-list" id="productList">
+            <!-- Tarjetas de productos se generarán aquí -->
+        </div>
+        <button class="back-button" onclick="goBack()">Volver a marcas</button>
+    </div>
+
+    <script>
+        const products = {
+            "Motorola": [
+                {name: "Moto E14 64GB", price: 250, image: "https://via.placeholder.com/200"},
+                {name: "Moto G04S 4/64GB", price: 280, image: "https://via.placeholder.com/200"},
+                {name: "Moto G04S 4/128GB", price: 308, image: "https://via.placeholder.com/200"},
+                {name: "Moto G24 4/256GB", price: 390, image: "https://via.placeholder.com/200"},
+                {name: "Moto G34 8/256GB", price: 515, image: "https://via.placeholder.com/200"}
+            ],
+            "ZTE": [
+                {name: "L220 1/32GB", price: 165, image: "https://via.placeholder.com/200"},
+                {name: "A34 64GB", price: 225, image: "https://via.placeholder.com/200"},
+                {name: "A73 128GB", price: 290, image: "https://via.placeholder.com/200"},
+                {name: "V50 Design 256GB", price: 358, image: "https://via.placeholder.com/200"}
+            ],
+            "Tablet": [
+                {name: "Krono Net X2 4/64GB", price: 265, image: "https://via.placeholder.com/200"},
+                {name: "Touch+ 10\" 2/128GB", price: 265, image: "https://via.placeholder.com/200"},
+                {name: "Redmi Pad SE 8.7 4/128GB", price: 450, image: "https://via.placeholder.com/200"},
+                {name: "Fenix 9 7\" 3G 32GB", price: 185, image: "https://via.placeholder.com/200"},
+                {name: "Star 9 7\" 3G 32GB", price: 185, image: "https://via.placeholder.com/200"},
+                {name: "Fenix 9 7\" 64GB", price: 220, image: "https://via.placeholder.com/200"}
+            ],
+            "Oppo": [
+                {name: "A20 128GB", price: 410, image: "https://via.placeholder.com/200"},
+                {name: "A40 4/256GB", price: 555, image: "https://via.placeholder.com/200"},
+                {name: "A80 5G 8/256GB", price: 850, image: "https://via.placeholder.com/200"}
+            ],
+            "Infinix": [
+                {name: "Note 40 Pro 5G", price: 1100, image: "https://via.placeholder.com/200"},
+                {name: "Note 40 Pro", price: 890, image: "https://via.placeholder.com/200"}
+            ],
+            "Samsung": [
+                {name: "A05 64GB", price: 310, image: "https://via.placeholder.com/200"},
+                {name: "A05 128GB", price: 340, image: "https://via.placeholder.com/200"},
+                {name: "A05S 6/128GB", price: 370, image: "https://via.placeholder.com/200"},
+                {name: "A06 4/128GB", price: 375, image: "https://via.placeholder.com/200"},
+                {name: "A15 8/256GB", price: 550, image: "https://via.placeholder.com/200"},
+                {name: "A25 5G 6/128GB", price: 560, image: "https://via.placeholder.com/200"},
+                {name: "A45 5G 8/256GB", price: 950, image: "https://via.placeholder.com/200"}
+            ],
+            "Tecno": [
+                {name: "Spark 10 4/128GB", price: 200, image: "https://via.placeholder.com/200"},
+                {name: "Spark 10 Pro 4/128GB", price: 215, image: "https://via.placeholder.com/200"},
+                {name: "Pop 7 4/64GB", price: 255, image: "https://via.placeholder.com/200"}
+            ],
+            "Realme": [
+                {name: "Narzo 50 4/128GB", price: 300, image: "https://via.placeholder.com/200"},
+                {name: "Realme 11 6/128GB", price: 350, image: "https://via.placeholder.com/200"},
+                {name: "Realme 11 8/256GB", price: 500, image: "https://via.placeholder.com/200"}
+            ],
+            "Xiaomi": [
+                {name: "Redmi Note 12 4/128GB", price: 275, image: "https://via.placeholder.com/200"},
+                {name: "Redmi Note 12 Pro 6/128GB", price: 375, image: "https://via.placeholder.com/200"},
+                {name: "Redmi 10A 3/64GB", price: 180, image: "https://via.placeholder.com/200"}
+            ],
+            "Poco": [
+                {name: "Poco X5 Pro 8/256GB", price: 490, image: "https://via.placeholder.com/200"},
+                {name: "Poco F5 8/256GB", price: 550, image: "https://via.placeholder.com/200"}
+            ],
+            "Corn": [
+                {name: "Corn 1 64GB", price: 215, image: "https://via.placeholder.com/200"},
+                {name: "Corn 2 128GB", price: 250, image: "https://via.placeholder.com/200"}
+            ]
+        };
+
+        function showProducts(brand) {
+            document.getElementById("brandSelection").style.display = "none";
+            document.getElementById("productCatalog").style.display = "flex";
+            document.getElementById("selectedBrand").textContent = brand;
+            const productList = document.getElementById("productList");
+            productList.innerHTML = "";
+            products[brand].forEach(product => {
+                const productCard = document.createElement("div");
+                productCard.classList.add("product-card");
+                productCard.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}">
+                    <div class="product-info">
+                        <span class="product-name">${product.name}</span>
+                        <span class="price">$${product.price}</span>
+                    </div>
+                `;
+                productList.appendChild(productCard);
+            });
+        }
+
+        function goBack() {
+            document.getElementById("brandSelection").style.display = "flex";
+            document.getElementById("productCatalog").style.display = "none";
+        }
+    </script>
+</body>
+</html>
